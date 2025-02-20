@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 
 const Navbar = () => {
@@ -14,26 +14,65 @@ const Navbar = () => {
 
         {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-6 text-lg">
-          {["Home", "About Us", "Contact", "Dashboard"].map((item) => (
-            <li key={item}>
+          
+            <li >
               <NavLink
-                to={item === "Home" ? "/" : `/${item.toLowerCase().replace(" ", "-")}`}
+                to='/'
                 className={({ isActive }) =>
                   `hover:text-[#F5558D] transition ${
                     isActive ? "text-[#F5558D]" : "text-white"
                   }`
                 }
               >
-                {item}
+                Home
               </NavLink>
             </li>
-          ))}
+            <li >
+              <NavLink
+                to='/about'
+                className={({ isActive }) =>
+                  `hover:text-[#F5558D] transition ${
+                    isActive ? "text-[#F5558D]" : "text-white"
+                  }`
+                }
+              >
+                About Us
+              </NavLink>
+            </li>
+            <li >
+              <NavLink
+                to='/contact'
+                className={({ isActive }) =>
+                  `hover:text-[#F5558D] transition ${
+                    isActive ? "text-[#F5558D]" : "text-white"
+                  }`
+                }
+              >
+                Contact
+              </NavLink>
+            </li>
+            <li >
+              <NavLink
+                to='dashboard'
+                className={({ isActive }) =>
+                  `hover:text-[#F5558D] transition ${
+                    isActive ? "text-[#F5558D]" : "text-white"
+                  }`
+                }
+              >
+                Dashboard
+              </NavLink>
+            </li>
+          
         </ul>
 
         {/* Login Button */}
-        <button className="hidden md:block px-4 py-2 bg-[#F5558D] text-white rounded-md hover:opacity-80">
-          Log In
-        </button>
+        <Link to='/login'>
+            <button className="hidden md:block px-4 py-2 bg-[#F5558D] text-white rounded-md hover:opacity-80">
+              Log In
+            </button>
+            </Link>
+        
 
         {/* Mobile Menu Icon */}
         <button className="md:hidden text-2xl" onClick={() => setIsOpen(!isOpen)}>
@@ -45,10 +84,10 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden bg-[#4c3575] py-4 absolute top-[60px] left-0 w-full text-center">
           <ul className="space-y-4">
-            {["Home", "About Us", "Contact", "Dashboard"].map((item) => (
-              <li key={item}>
+           
+              <li >
                 <NavLink
-                  to={item === "Home" ? "/" : `/${item.toLowerCase().replace(" ", "-")}`}
+                  to="/"
                   className={({ isActive }) =>
                     `block py-2 hover:text-[#F5558D] transition ${
                       isActive ? "text-[#F5558D]" : "text-white"
@@ -56,13 +95,51 @@ const Navbar = () => {
                   }
                   onClick={() => setIsOpen(false)}
                 >
-                  {item}
+                  Home
                 </NavLink>
               </li>
-            ))}
+              <li >
+              <NavLink
+                to='/about'
+                className={({ isActive }) =>
+                  `hover:text-[#F5558D] transition ${
+                    isActive ? "text-[#F5558D]" : "text-white"
+                  }`
+                }
+              >
+                About Us
+              </NavLink>
+            </li>
+            <li >
+              <NavLink
+                to='/contact'
+                className={({ isActive }) =>
+                  `hover:text-[#F5558D] transition ${
+                    isActive ? "text-[#F5558D]" : "text-white"
+                  }`
+                }
+              >
+                Contact
+              </NavLink>
+            </li>
+            <li >
+              <NavLink
+                to='dashboard'
+                className={({ isActive }) =>
+                  `hover:text-[#F5558D] transition ${
+                    isActive ? "text-[#F5558D]" : "text-white"
+                  }`
+                }
+              >
+                Dashboard
+              </NavLink>
+            </li>
+            
+            <Link to='/login'>
             <button className="px-4 py-2 bg-[#F5558D] text-white rounded-md hover:opacity-80 w-full">
               Log In
             </button>
+            </Link>
           </ul>
         </div>
       )}
