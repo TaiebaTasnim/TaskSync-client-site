@@ -6,7 +6,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-[#4c3575] text-white fixed top-0 left-0 w-full shadow-md z-50">
+    <nav className="bg-[#4c3575] text-white fixed top-0 left-0 w-full  shadow-md z-50">
       <div className="container mx-auto w-[90%] flex justify-between items-center py-4">
         
         {/* Site Name */}

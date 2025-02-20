@@ -1,9 +1,13 @@
 
+import Features from "../Components/Features";
+import Hero from "../Components/Hero";
+
 
 const Home = () => {
       return (
             <div>
-                  <h1>Hi</h1>
+                  <Hero></Hero>
+                  <Features></Features>
                   
             </div>
       );
