@@ -5,6 +5,11 @@ import Home from "../Pages/Home"
 import AboutUs from "../Pages/AboutUs"
 import Contact from "../Pages/Contact"
 import Login from "../Pages/Login"
+import Dashboard from "../Main_Layout/Dashboard"
+import TaskForm from "../Pages/DashboardPage/TaskForm"
+import ManageTasks from "../Pages/DashboardPage/ManageTasks"
+import PrivateRoute from "../Private/PrivateRoute"
+
 
 
 const Route = createBrowserRouter([
@@ -15,7 +20,11 @@ const Route = createBrowserRouter([
         children:[
             {
                   path:"/",
-                  element:<Home></Home>
+                  element:<Login></Login>
+            },
+            {
+                  path:"/home",
+                  element:<PrivateRoute><Home></Home></PrivateRoute>
             },
             {
                   path:"/about",
@@ -25,13 +34,29 @@ const Route = createBrowserRouter([
                   path:"/contact",
                   element:<Contact></Contact>
             },
-            {
-                  path:"/login",
-                  element:<Login></Login>
-            },
+            
         ]
         
             
+      },
+      {
+            path:'/dashboard',
+            element:<PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
+            errorElement:<ErrorPage></ErrorPage>,
+            children:[
+                  {
+                        path:'tasks',
+                        element:<TaskForm></TaskForm>
+                  },
+                  {
+                        path:'manageTasks',
+                        element:<ManageTasks></ManageTasks>
+                  },
+                  
+
+            ]
+            
+
       }   
 ])
 export default Route

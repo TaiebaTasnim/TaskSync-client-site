@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Hero = () => {
       return (
         <section className="relative w-full h-[100vh] flex items-center justify-center overflow-hidden">
@@ -19,9 +21,11 @@ const Hero = () => {
             <p className="mt-4 text-[16px] md:text-[18px] opacity-90">
               Organize, track, and complete your tasks seamlessly with TaskSync. From planning to completion, streamline your workflow with intuitive task tracking and real-time updates.
             </p>
+            <Link to="/dashboard/tasks">
             <button className="mt-6 px-6 py-3 text-lg font-semibold bg-[#F5558D] rounded-lg hover:bg-[#e04a7a] transition">
               Get Started
             </button>
+            </Link>
           </div>
         </section>
       );

@@ -1,9 +1,35 @@
-import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { AuthContext } from "../../Provider/AuthProvider";
+import Swal from "sweetalert2";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const {user,signout}=useContext(AuthContext)
+  const navigate=useNavigate()
+  const handlesignout = () => {
+      signout()
+        .then(() => {
+          //alert("Logged out successfully");
+          Swal.fire({
+                      title: "Logout Successful!",
+                      icon: "success",
+                      timer: 2000,
+                      showConfirmButton: false,
+                    });
+          navigate("/")
+        })
+        .catch((error) => {
+            console.log(error)
+          //alert(`Logout failed: ${error.message}`);
+           Swal.fire({
+                                    title: "Error",
+                                    text: "There was an error in logout. Please try again.",
+                                    icon: "error",
+                              });
+        });
+    };
 
   return (
     <nav className="bg-[#4c3575] text-white fixed top-0 left-0 w-full  shadow-md z-50">
@@ -17,7 +43,7 @@ const Navbar = () => {
           
             <li >
               <NavLink
-                to='/'
+                to='/home'
                 className={({ isActive }) =>
                   `hover:text-[#F5558D] transition ${
                     isActive ? "text-[#F5558D]" : "text-white"
@@ -53,7 +79,7 @@ const Navbar = () => {
             </li>
             <li >
               <NavLink
-                to='dashboard'
+                to='/dashboard/tasks'
                 className={({ isActive }) =>
                   `hover:text-[#F5558D] transition ${
                     isActive ? "text-[#F5558D]" : "text-white"
@@ -66,12 +92,24 @@ const Navbar = () => {
           
         </ul>
 
-        {/* Login Button */}
-        <Link to='/login'>
+        {
+        user ? <Link>
+            <button 
+            onClick={handlesignout}
+            className="hidden md:block px-4 py-2 bg-[#F5558D] text-white rounded-md hover:opacity-80">
+              SignOut
+            </button>
+            </Link>
+            : <Link to='/login'>
             <button className="hidden md:block px-4 py-2 bg-[#F5558D] text-white rounded-md hover:opacity-80">
               Log In
             </button>
             </Link>
+
+        }
+
+        {/* Login Button */}
+        
         
 
         {/* Mobile Menu Icon */}
@@ -87,7 +125,7 @@ const Navbar = () => {
            
               <li >
                 <NavLink
-                  to="/"
+                  to="/home"
                   className={({ isActive }) =>
                     `block py-2 hover:text-[#F5558D] transition ${
                       isActive ? "text-[#F5558D]" : "text-white"
@@ -124,7 +162,7 @@ const Navbar = () => {
             </li>
             <li >
               <NavLink
-                to='dashboard'
+                to='/dashboard/tasks'
                 className={({ isActive }) =>
                   `hover:text-[#F5558D] transition ${
                     isActive ? "text-[#F5558D]" : "text-white"
@@ -134,12 +172,24 @@ const Navbar = () => {
                 Dashboard
               </NavLink>
             </li>
-            
-            <Link to='/login'>
-            <button className="px-4 py-2 bg-[#F5558D] text-white rounded-md hover:opacity-80 w-full">
+            {
+        user ? <Link>
+            <button 
+            onClick={handlesignout}
+            className=" md:hidden px-4 py-2 bg-[#F5558D] text-white rounded-md hover:opacity-80">
+              SignOut
+            </button>
+            </Link>
+            : <Link to='/login'>
+            <button className=" md:hidden px-4 py-2 bg-[#F5558D] text-white rounded-md hover:opacity-80">
               Log In
             </button>
             </Link>
+
+        }
+            
+            
+       
           </ul>
         </div>
       )}

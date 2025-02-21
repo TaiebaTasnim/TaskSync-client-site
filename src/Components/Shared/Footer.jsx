@@ -6,18 +6,18 @@ const Footer = () => {
       <div className="container mx-auto w-[90%] flex flex-col md:flex-row justify-between  text-center md:text-left">
         
         {/* Site Name */}
-        <div className=" w-[50%]">
+        <div className=" md:w-[50%] ">
           <h2 className="text-2xl font-bold text-[#F5558D]">TaskSync</h2>
           <p className="text-lg font-semibold  mt-1 ">
             Effortless Task Management 
           </p>
-          <p className="text-sm opacity-80 mt-2 w-[60%]">
+          <p className="text-sm opacity-80 mt-2 md:w-[60%]">
             From planning to completion, streamline your workflow with intuitive task tracking and real-time updates.
           </p>
         </div>
 
         {/* Services */}
-        <div className="mt-6 md:mt-0 w-[50%]">
+        <div className="mt-6 md:mt-0 md:w-[50%]">
           <h3 className="text-lg font-semibold text-[#F5558D]">Services</h3>
           <ul className="mt-2 space-y-1">
             <li>✔ Task Add, Edit & Delete</li>
