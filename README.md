@@ -5,7 +5,7 @@ TaskSync is a modern task management web application designed to streamline coll
 
 ## 🌍 Live Demo
 
-Check out the live version: [Fit-Me Live](https://tasksync-5e233.web.app) 
+Check out the live version: [TaskSync Live](https://tasksync-5e233.web.app) 
 
 ## 🚀 Features
 
@@ -16,6 +16,15 @@ Check out the live version: [Fit-Me Live](https://tasksync-5e233.web.app)
 - 🔔 **Notifications** – Get real-time updates with SweetAlert2.
 - 🔒 **Authentication** – Secure user authentication powered by Firebase.
 - 📊 **Offline Support** – Leverage LocalForage for better offline experience.
+
+## 🛠️ Technologies Used
+
+- **Frontend:** React, React Router, Tailwind CSS
+- **State Management:** React Query
+- **Backend & Authentication:** Firebase, Express.js, MongoDB
+- **UI Enhancements:** react-icon,react-beautiful-dnd, SweetAlert2
+- **Development Tools:** Vite, ESLint, PostCSS
+
 
 ## 📂 Table of Contents
 
