@@ -21,6 +21,7 @@ const Login = () => {
             // eslint-disable-next-line react-hooks/rules-of-hooks
             const axiosPublic = useAxiosPublic(); 
         await axiosPublic.post(`/users/${user?.email}`, {
+          uid: user?.uid, 
           name: user?.displayName,
           image: user?.photoURL,
           email: user?.email,
@@ -62,8 +63,8 @@ const Login = () => {
     }
       return (
            <div className="min-h-screen container mx-auto w-[90%]">
-            <h1 className="text-center pt-8 pb-4 text-4xl">Welcome to TaskSync!</h1>
-            <p className="text-center text-xl">Manage your tasks effortlessly. Please log in to get started.</p>
+            <h1 className="text-center pt-8 pb-4 text-xl font-bold md:text-4xl text-[#4c3575]">Welcome to TaskSync!</h1>
+            <p className="text-center text-xs md:text-xl">Manage your tasks effortlessly. Please log in to get started.</p>
              <div className="flex flex-col gap-10 mt-10  md:flex-row items-center justify-center mb-8  ">
                  
                   

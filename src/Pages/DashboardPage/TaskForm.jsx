@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import Swal from "sweetalert2";
+import { AuthContext } from "../../Provider/AuthProvider";
 
 const TaskForm = () => {
+      const {user}=useContext(AuthContext)
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("Select a Category");
+  const [category, setCategory] = useState("To-Do");
   console.log(category)
   //const timestamp = new Date().toLocaleString(); // Auto-generated timestamp
   const axiosPublic=useAxiosPublic()
@@ -21,6 +23,8 @@ const TaskForm = () => {
       title,
       description,
       category,
+      Useremail:user?.email,
+      timestamp: Date.now()
     };
      console.log(newTask)
      axiosPublic.post("/tasks",newTask, {
@@ -40,7 +44,7 @@ const TaskForm = () => {
                   //alert("Task created successfully")
                   setTitle("");
                   setDescription("");
-                  setCategory("Select a Category");
+                  setCategory("To-Do");
                   
             }
       })

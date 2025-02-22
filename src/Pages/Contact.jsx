@@ -1,4 +1,5 @@
 import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
 const Contact = () => {
 
@@ -17,10 +18,21 @@ const Contact = () => {
             .then((response) => {
               // Check if the request was successful
               if (response.ok) {
-                  toast("Message send succesfully!")
+                  Swal.fire({
+                              title: "Message send successfully!",
+                              icon: "success",
+                              timer: 2000,
+                              showConfirmButton: false,
+                            });
+                  
                 form.reset();
               } else {
-                alert("There was an error submitting the form.");
+               Swal.fire({
+                                         title: "Error",
+                                         text: "There was an error in sending message. Please try again.",
+                                         icon: "error",
+                                   });
+                       
               }
             })
             .catch((error) => {

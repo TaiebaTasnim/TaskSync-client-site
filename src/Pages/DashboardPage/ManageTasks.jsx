@@ -3,20 +3,27 @@ import useAxiosPublic from "../../hooks/useAxiosPublic";
 import { useQuery } from "@tanstack/react-query";
 import { FaClock, FaEdit, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import { AuthContext } from "../../Provider/AuthProvider";
 
 const ManageTasks = () => {
   const axiosPublic = useAxiosPublic();
+  const {user}=useContext(AuthContext)
 
   const { data: tasks = [], refetch } = useQuery({
-    queryKey: ["tasks"],
-    queryFn: async () => {
-      const res = await axiosPublic.get("/tasks");
-      const validTasks = res.data.filter((task) => task._id && task._id.length === 24);
-      return validTasks;
-    },
-  });
+      queryKey: ["tasks", user?.email], // Include user email in the query key
+      queryFn: async () => {
+        if (!user?.email) {
+          return []; // Return an empty array if no user email is available
+        }
+    
+        const res = await axiosPublic.get(`/tasks/${user.email}`);
+        const validTasks = res.data.filter((task) => task._id && task._id.length === 24);
+        return validTasks;
+      },
+      enabled: !!user?.email, // Only fetch tasks if the user email is available
+    });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -31,11 +38,13 @@ const ManageTasks = () => {
     
       // Create the updated task object
       const updatedTask = {
-            ...selectedTask,
-            title: e.target.title.value,
-            description: e.target.description.value,
-            category: e.target.category.value,
-          };
+        ...selectedTask, // Include all existing fields from the selected task
+        title: e.target.title.value, // Updated title from the form
+        description: e.target.description.value, // Updated description from the form
+        category: e.target.category.value, // Updated category from the form
+        order: selectedTask.order, // Preserve the existing order (or update it if needed)
+        
+      };
     
       try {
         // Send the update request to the server
@@ -58,6 +67,39 @@ const ManageTasks = () => {
         Swal.fire("Error!", "Failed to update task. Please try again.", "error");
       }
     };
+
+//   const handleUpdate = async (e) => {
+//       e.preventDefault();
+    
+//       // Create the updated task object
+//       const updatedTask = {
+//             ...selectedTask,
+//             title: e.target.title.value,
+//             description: e.target.description.value,
+//             category: e.target.category.value,
+//           };
+    
+//       try {
+//         // Send the update request to the server
+//          await axiosPublic.put(`/tasks/${selectedTask._id}`, updatedTask);
+    
+//         // Show success message
+//         Swal.fire({
+//           title: "Updated!",
+//           text: "Task updated successfully!",
+//           icon: "success",
+//         });
+    
+//         // Refresh the task list
+//         refetch();
+    
+//         // Close the modal
+//         setIsModalOpen(false);
+//       } catch (err) {
+//         console.error("Error updating task:", err);
+//         Swal.fire("Error!", "Failed to update task. Please try again.", "error");
+//       }
+//     };
 
   const handleDelete = async (id) => {
     Swal.fire({
@@ -91,71 +133,48 @@ const ManageTasks = () => {
   useEffect(() => {
     setLocalTasks(tasks); // Synchronize local tasks with fetched tasks
   }, [tasks]);
-  
-  
-    const onDragEnd = async (result) => {
-        const { destination, source, draggableId } = result;
-      
-        if (!destination) return; // Task was dropped outside a valid area
-      
-        // If the task was dropped in the same position, do nothing
-        if (destination.index === source.index && destination.droppableId === source.droppableId) {
+
+  const onDragEnd = async (result) => {
+      const { source, destination, draggableId } = result;
+
+      if (!destination) return;
+
+      if (
+          source.droppableId === destination.droppableId &&
+          source.index === destination.index
+      ) {
           return;
-        }
-      
-        // Clone tasks array
-        const updatedTasks = [...tasks];
-      
-        // Find the task being moved
-        const movedTaskIndex = updatedTasks.findIndex((task) => task._id === draggableId);
-        if (movedTaskIndex === -1) return; // Task not found, exit
-      
-        const movedTask = updatedTasks[movedTaskIndex];
-      
-        if (destination.droppableId === source.droppableId) {
-          // Reordering within the same category
-          updatedTasks.splice(movedTaskIndex, 1); // Remove task from old position
-          updatedTasks.splice(destination.index, 0, movedTask); // Insert task at new position
-      
-          // Update local state first
-          setLocalTasks(updatedTasks);
-      
-          // Send the reordered tasks to the server
-          await reorderTasksInDatabase(updatedTasks);
-        } else {
-          // Moving to a different category
-          movedTask.category = destination.droppableId;
-      
-          // Update local state
-          const newTasks = updatedTasks.map((task) =>
-            task._id === draggableId ? movedTask : task
-          );
-          setLocalTasks(newTasks);
-      
-          // Send update to the server
-          await updateTaskInDatabase(draggableId, { category: destination.droppableId });
-        }
-      
-         refetch(); // Ensure the UI updates with fresh data
+      }
+
+      const updatedTasks = Array.from(localTasks);
+      const taskIndex = updatedTasks.findIndex((task) => task._id === draggableId);
+      if (taskIndex === -1) return;
+
+      const task = updatedTasks[taskIndex];
+      updatedTasks.splice(taskIndex, 1);
+      updatedTasks.splice(destination.index, 0, {
+          ...task,
+          category: destination.droppableId,
+      });
+
+      setLocalTasks(updatedTasks);
+
+      const reorderData = {
+          sourceCategory: source.droppableId,
+          destinationCategory: destination.droppableId,
+          sourceIndex: source.index,
+          destinationIndex: destination.index,
+          taskId: draggableId,
       };
-  
-      const reorderTasksInDatabase = async (tasks) => {
-         try {
-                await axiosPublic.put("/tasks/reorder", { tasks });
-              } catch (error) {
-                console.error("Error reordering tasks:", error);
-              }
-            };
-      
-          
-            const updateTaskInDatabase = async (id, updateData) => {
-              try {
-                await axiosPublic.put(`/tasks/${id}`, updateData);
-              } catch (error) {
-                console.error("Error updating task:", error);
-              }
-            };
-  
+
+      try {
+          await axiosPublic.post("/tasks/reorder", reorderData);
+          refetch();
+      } catch (error) {
+          setLocalTasks(tasks);
+          alert.error(error.message || "Failed to reorder task");
+      }
+  };
 
   const categories = [
     { title: "To Do", key: "To-Do" },
